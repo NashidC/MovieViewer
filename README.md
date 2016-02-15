@@ -20,7 +20,6 @@ Following Required Options are implemented:
 
 ## Notes
 
-Describe any challenges encountered while building the app.
     Adding loading 
     Getting cell to recycle
 
