@@ -10,6 +10,12 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    
+    @IBOutlet weak var posterImageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var overviewLabel: UILabel!
+    
+    var movie: NSDictionary!
    
     
     
@@ -17,6 +23,16 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+       
+        let title = movie["title"] as? String
+        titleLabel.text = title
+        
+        let overview = movie["overview"]
+        overviewLabel.text = overview as? String
+        
+        print (movie)
+        
+        
         // Do any additional setup after loading the view.
     }
 
