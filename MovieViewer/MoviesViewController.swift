@@ -7,14 +7,16 @@
 //
 
 import UIKit
-import AFNetworking
+import AFNetworking 
 
 import MBProgressHUD
 
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    var isMoreDataLoading = false
     
+
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var tablesView: UITableView!
@@ -22,17 +24,23 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     var movies: [NSDictionary]?
     @IBOutlet weak var tableViews: UITableView!
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
+        
         tableView.dataSource = self
         tableView.delegate = self
-        
-       
+        tableView.insertSubview(refreshControl, atIndex: 0)
+    }
+        func refreshControlAction(refreshControl: UIRefreshControl){
         
         // Do any additional setup after loading the view.
-        
-        
+            func loadMoreData(){
+       
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
         let request = NSURLRequest(
@@ -57,8 +65,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                         data, options:[]) as? NSDictionary {
                             print("response: \(responseDictionary)")
                             
+                            self.isMoreDataLoading = false
                             self.movies = (responseDictionary["results"] as! [NSDictionary])
                             self.tableView.reloadData()
+                            refreshControl.endRefreshing()
                             
                     }
                 }
@@ -66,6 +76,22 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         task.resume()
 
     }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if (!isMoreDataLoading){
+            
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.dragging) {
+                isMoreDataLoading = true
+                
+                loadMoreData()
+            }
+        }
+    }
+}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -114,4 +140,4 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     */
 
-}
+ }
