@@ -1,27 +1,40 @@
-# MovieViewer
-Flicks: A Movie Viewing App implementing Movie Database API
+#Project 1- Flicks
+**Flicks** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: 7 hours
-Nashid Chowdhury
+Time spent: **7** hours spent in total
 
-##User Stories
-Following Required Options are implemented:
+## User Stories
 
-* [x]User can view a list of movies currently playing in theaters from The Movie Database.
-* [x]Poster images are loaded using the UIImageView category in the AFNetworking library.
-* [x]The movie poster is available by appending the returned poster_path to https://image.tmdb.org/t/p/w342.
-* [x]User sees a loading state while waiting for the movies API (you can use any 3rd party library available to do this).
-* [ ]User can pull to refresh the movie list.
+The following **required** functionality is complete:
+
+- [x] User can view a list of movies currently playing in theaters from The Movie Database.
+- [x] Poster images are loaded using the UIImageView category in the AFNetworking library.
+- [x] User sees a loading state while waiting for the movies API.
+- [ ] User can pull to refresh the movie list.
+
+The following **optional** features are implemented:
+
+- [ ] User sees an error message when there's a networking error.
+- [ ] Movies are displayed using a CollectionView instead of a TableView.
+- [ ] User can search for a movie.
+- [ ] All images fade in as they are loading.
+- [ ] Customize the UI.
+
+The following **additional** features are implemented:
+
+- [ ] List anything else that you can get done to improve the app functionality!
 
 
 ## Video Walkthrough
 
 <img src='http://i.imgur.com/IXQ51sa.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-## Notes
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
-    Adding loading 
-    Getting cell to recycle
+## Notes
+    Difficulties 
+    1. Adding loading 
+    2. Getting cell to recycle
 
 ## License
 
