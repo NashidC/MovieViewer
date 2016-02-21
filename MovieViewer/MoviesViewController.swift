@@ -18,23 +18,24 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
 
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var tablesView: UITableView!
-    
-    var movies: [NSDictionary]?
     @IBOutlet weak var tableViews: UITableView!
     
+    var movies: [NSDictionary]?
+    var refreshControl:UIRefreshControl
+    var endpoint: String = ""
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "didRefresh", forControlEvents: .ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.insertSubview(refreshControl, atIndex: 0)
+        
     }
         func refreshControlAction(refreshControl: UIRefreshControl){
         
@@ -42,7 +43,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             func loadMoreData(){
        
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string: "https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(
             URL: url!,
             cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
@@ -103,7 +104,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             return movies.count
         } else {
             return 0
-        }
+      }
         
     }
     
@@ -122,12 +123,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             
         let imageUrl = NSURL(string: baseUrl + posterPath)
         cell.posterView.setImageWithURL(imageUrl!)
-        }
+    }
         
         print("row\(indexPath.row)")
         
         return cell
-    }
+}
 
     
     // MARK: - Navigation
@@ -143,7 +144,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let detailViewController = segue.destinationViewController as! DetailViewController
         detailViewController.movie = movie
         
-        
+        print("prepare for segue called")
         
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
