@@ -22,7 +22,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var tableViews: UITableView!
     
     var movies: [NSDictionary]?
-    var refreshControl:UIRefreshControl
+    var refreshControl:UIRefreshControl?
     var endpoint: String = ""
     
     
@@ -30,8 +30,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
         
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "didRefresh", forControlEvents: .ValueChanged)
-        tableView.insertSubview(refreshControl, atIndex: 0)
+        refreshControl!.addTarget(self, action: "didRefresh", forControlEvents: .ValueChanged)
+        tableView.insertSubview(refreshControl!, atIndex: 0)
         
         tableView.dataSource = self
         tableView.delegate = self
