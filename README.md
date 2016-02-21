@@ -1,7 +1,7 @@
 #Project 1- Flicks
 **Flicks** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **7** hours spent in total
+Time spent: **10** hours spent in total
 
 ## User Stories
 
@@ -11,8 +11,8 @@ The following **required** functionality is complete:
 - [x] Poster images are loaded using the UIImageView category in the AFNetworking library.
 - [x] User sees a loading state while waiting for the movies API.
 - [x] User can pull to refresh the movie list.
-- [ ] User can view movie details by tapping on a cell.
-- [ ] User can select from a tab bar for either **Now Playing** or **Top Rated** movies.
+- [x] User can view movie details by tapping on a cell.
+- [x] User can select from a tab bar for either **Now Playing** or **Top Rated** movies.
 - [ ] Customize the selection effect of the cell.
 
 The following **optional** features are implemented:
