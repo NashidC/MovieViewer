@@ -14,7 +14,7 @@ import MBProgressHUD
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    var isMoreDataLoading = false
+  
     
 
     @IBOutlet weak var tableView: UITableView!
@@ -23,22 +23,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     var movies: [NSDictionary]?
     var refreshControl = UIRefreshControl()
     var endpoint: String!
-    
+      var isMoreDataLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.delegate = self
-        
-        
-        
-        refreshControl.addTarget(self, action: "didRefresh", forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self, action: "loadMoreData", forControlEvents: .ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
+        tableView.dataSource = self
+        tableView.delegate = self
+        loadMoreData()
     }
     
-   
         
         
         // Do any additional setup after loading the view.
@@ -58,7 +55,11 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             delegateQueue: NSOperationQueue.mainQueue()
         )
         
-         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        if !refreshControl.refreshing{
+            
+            MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    }
+        
         
         let task: NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
@@ -67,22 +68,33 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            print("response: \(responseDictionary)")
                             
-                            self.isMoreDataLoading = false
-                            self.movies = (responseDictionary["results"] as! [NSDictionary])
-                            self.tableView.reloadData()
+                                self.isMoreDataLoading = false
+                                self.movies = (responseDictionary["results"] as! [NSDictionary])
+                                self.tableView.reloadData()
                             
-                            
+                    self.refreshControl.endRefreshing()
+        
                     }
                 }
-                
-        });
+    })
         task.resume()
-        
-        loadMoreData()
 
     }
+func scrollViewDidScroll(scrollView: UIScrollView) {
+    if (!isMoreDataLoading){
+        
+        let scrollViewContentHeight = tableView.contentSize.height
+        let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+        
+        
+        if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.dragging) {
+            isMoreDataLoading = true
+            
+            loadMoreData()
+        }
+    }
+}
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -98,24 +110,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func refreshControlAction(refreshControl: UIRefreshControl){
         
-        loadMoreData()
-       
-        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
-        let request = NSURLRequest(
-            URL: url!,
-            cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
-            timeoutInterval: 10)
+      loadMoreData()
+
         
-     
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-            delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
-        )
-        
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+        /*let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
+                
                 
                 // ... Use the new data to update the data source ...
                 if let data = dataOrNil {
@@ -123,18 +123,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                         data, options:[]) as? NSDictionary {
                             print("response: \(responseDictionary)")
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            self.tableView.reloadData()
+                    
+                            
+                            */
                     }
-                }
-                
-                self.tableView.reloadData()
-        
-                refreshControl.endRefreshing()
-        });
-        task.resume()
-    }
-        
- 
+    
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
